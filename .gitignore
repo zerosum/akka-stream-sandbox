@@ -1,0 +1,6 @@
+### sbt
+target/
+
+### idea
+.idea/
+*.iml
