@@ -16,17 +16,33 @@ lazy val commonSettings = Seq (
 
 lazy val root = project in file(".")
 
+lazy val message = (project in file("message"))
+  .settings(
+    libraryDependencies ++= {
+      val circeVersion = "0.10.0"
+
+      Seq(
+        "io.circe" %% "circe-core",
+        "io.circe" %% "circe-generic",
+        "io.circe" %% "circe-parser"
+      ).map(_ % circeVersion)
+    }
+  )
+
 lazy val receiver = (project in file("receiver"))
+  .dependsOn(message)
   .settings(
     commonSettings
   )
 
 lazy val transferer = (project in file("transferer"))
+  .dependsOn(message)
   .settings(
     commonSettings
   )
 
 lazy val deliverer = (project in file("deliverer"))
+  .dependsOn(message)
   .settings(
     commonSettings,
     libraryDependencies ++= Seq(
