@@ -16,7 +16,7 @@ object Bootstrap extends App {
 
   val kafkaConfig = system.settings.config.getConfig("akka.kafka")
 
-  val bootstrapServers = "localhost:32774"
+  val bootstrapServers = "localhost:9092"
 
   val consumerConfig = kafkaConfig.getConfig("consumer")
   val consumerSettings =

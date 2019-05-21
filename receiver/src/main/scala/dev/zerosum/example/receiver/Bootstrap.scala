@@ -23,7 +23,7 @@ object Bootstrap extends App {
   val config = system.settings.config.getConfig("akka.kafka.producer")
   val producerSettings =
     ProducerSettings(config, new StringSerializer, new StringSerializer)
-      .withBootstrapServers("localhost:32774")
+      .withBootstrapServers("localhost:9092")
 
   val done: Future[Done] =
     Source(1 to 100)
