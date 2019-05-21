@@ -28,5 +28,8 @@ lazy val transferer = (project in file("transferer"))
 
 lazy val deliverer = (project in file("deliverer"))
   .settings(
-    commonSettings
+    commonSettings,
+    libraryDependencies ++= Seq(
+      "org.simplejavamail" % "simple-java-mail" % "5.1.6"
+    )
   )
