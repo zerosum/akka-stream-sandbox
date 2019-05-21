@@ -28,8 +28,8 @@ object Bootstrap extends App {
 
   def scoreStream: Stream[Int] = (Random.nextInt(50) + 50) #:: scoreStream
 
-  val firstNameSource = Source(firstNameStream.take(10))
-  val lastNameSource = Source(lastNameStream.take(10))
+  val firstNameSource = Source(firstNameStream.take(100))
+  val lastNameSource = Source(lastNameStream.take(100))
   val randomScoreSource = Source(scoreStream)
 
   val scores = Source.fromGraph(GraphDSL.create() { implicit b =>
@@ -49,6 +49,9 @@ object Bootstrap extends App {
 
   import Score.ScoreMarshaller
   val done: Future[Done] = scores
-      .map(score => new ProducerRecord[String, String]("front", score.id, score.marshal))
+      .map{ score =>
+        println(s"====== scoring result: $score")
+        new ProducerRecord[String, String]("front", score.id, score.marshal)
+      }
       .runWith(Producer.plainSink(producerSettings))
 }
