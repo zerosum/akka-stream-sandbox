@@ -1,21 +1,21 @@
-package dev.zerosum.example.receiver
+package dev.zerosum.example.submit
 
 import akka.Done
 import akka.actor.ActorSystem
 import akka.kafka.ProducerSettings
 import akka.kafka.scaladsl.Producer
-import akka.stream._
-import akka.stream.scaladsl._
+import akka.stream.scaladsl.{GraphDSL, Source, ZipWith}
+import akka.stream.{ActorMaterializer, SourceShape}
 import dev.zerosum.example.message.{Person, Score}
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.StringSerializer
 
-import scala.concurrent._
+import scala.concurrent.Future
 import scala.util.Random
 
 object Bootstrap extends App {
 
-  implicit val system = ActorSystem("receiver")
+  implicit val system = ActorSystem("submit")
   implicit val materializer = ActorMaterializer()
 
   val config = system.settings.config.getConfig("akka.kafka.producer")
@@ -28,8 +28,8 @@ object Bootstrap extends App {
 
   def scoreStream: Stream[Int] = (Random.nextInt(50) + 50) #:: scoreStream
 
-  val firstNameSource = Source(firstNameStream.take(100))
-  val lastNameSource = Source(lastNameStream.take(100))
+  val firstNameSource = Source(firstNameStream)
+  val lastNameSource = Source(lastNameStream)
   val randomScoreSource = Source(scoreStream)
 
   val scores = Source.fromGraph(GraphDSL.create() { implicit b =>
@@ -49,9 +49,9 @@ object Bootstrap extends App {
 
   import Score.ScoreMarshaller
   val done: Future[Done] = scores
-      .map{ score =>
+      .map { score =>
         println(s"====== scoring result: $score")
-        new ProducerRecord[String, String]("front", score.id, score.marshal)
+        new ProducerRecord[String, String]("submitted", score.id, score.marshal)
       }
       .runWith(Producer.plainSink(producerSettings))
 }

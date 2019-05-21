@@ -29,13 +29,13 @@ lazy val message = (project in file("message"))
     }
   )
 
-lazy val receiver = (project in file("receiver"))
+lazy val submit = (project in file("submit"))
   .dependsOn(message)
   .settings(
     commonSettings
   )
 
-lazy val transferer = (project in file("transferer"))
+lazy val sort = (project in file("sort"))
   .dependsOn(message)
   .settings(
     commonSettings

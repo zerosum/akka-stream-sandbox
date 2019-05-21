@@ -9,8 +9,8 @@ services:
     ports:
       - "9092:9092"
     environment:
-      KAFKA_ADVERTISED_HOST_NAME: 10.5.73.84
-      KAFKA_CREATE_TOPICS: "front:1:1,rear:1:1"
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.10.59
+      KAFKA_CREATE_TOPICS: "submitted:1:1,failure:1:1,passed:1:1"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -19,7 +19,7 @@ services:
     ports:
       - "9000:9000"
     environment:
-      ZK_HOST: 10.5.73.84:2181
+      ZK_HOST: 192.168.10.59:2181
   blackhole:
     image: tecnativa/smtp-sink:latest
     ports:

@@ -30,7 +30,7 @@ object Bootstrap extends App {
     .buildMailer
 
   val control = Consumer
-    .plainSource(consumerSettings, Subscriptions.topics("rear"))
+    .plainSource(consumerSettings, Subscriptions.topics("passed"))
     .map { msg =>
       val score = Score.unmarshal(msg.value())
       val student = score.person
